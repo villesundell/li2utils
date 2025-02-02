@@ -4,4 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-fips204 = { git = "https://github.com/integritychain/fips204.git" }
+fips204 = { git = "https://github.com/integritychain/fips204.git", features = ["ml-dsa-44", "default-rng"]}
+hex = "0.4"

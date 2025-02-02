@@ -1,30 +1,53 @@
-use fips204::ml_dsa_44; // Alternatively, you can use ml_dsa_65 or ml_dsa_87.
-use fips204::traits::{SerDes, Signer, Verifier};
+use std::convert::TryInto;
+use std::error::Error;
+use std::fs;
+use std::io::{self, Read};
+use std::path::Path;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // A sample message to be signed.
-    let message = [0u8, 1, 2, 3, 4, 5, 6, 7];
+use fips204::ml_dsa_44;
+use fips204::traits::{SerDes, Signer};
 
-    // --- Key Generation and Signing ---
-    // Generate a key pair: public key `pk1` and secret key `sk`.
-    let (pk1, sk) = ml_dsa_44::try_keygen()?;
-    // Sign the message with the secret key.
-    let sig = sk.try_sign(&message, &[])?;
+fn main() -> Result<(), Box<dyn Error>> {
+    // 1. Read the data to be signed from standard input.
+    let mut message = Vec::new();
+    io::stdin().read_to_end(&mut message)?;
 
-    // --- Serialization (Simulated Transmission) ---
-    // Convert the public key to bytes for sending.
-    let pk_send = pk1.into_bytes();
-    // In a real application, you would now send `pk_send`, `message`, and `sig` to a receiver.
-    // Here we simply reassign them to simulate reception.
-    let (pk_recv, msg_recv, sig_recv) = (pk_send, message, sig);
+    // 2. Load or generate the private key.
+    //    The private key is stored in "private_key.bin".
+    let sk_path = "private_key.bin";
+    let private_key = if Path::new(sk_path).exists() {
+        // Read the private key bytes from the file.
+        let sk_bytes = fs::read(sk_path)?;
+        // Check that the file length is as expected (here, 2560 bytes).
+        if sk_bytes.len() != 2560 {
+            return Err("Invalid private key file length".into());
+        }
+        // Convert the Vec<u8> into a fixed-size array.
+        let sk_array: [u8; 2560] = sk_bytes
+            .try_into()
+            .map_err(|_| "Failed to convert key bytes to fixed-size array")?;
+        // Reconstruct the private key using the deserialization method provided by SerDes.
+        <ml_dsa_44::PrivateKey as SerDes>::try_from_bytes(sk_array)?
+    } else {
+        // Generate a new key pair.
+        let (_public_key, sk) = ml_dsa_44::try_keygen()?;
+        // Save the private key bytes to the file.
+        fs::write(sk_path, &<ml_dsa_44::PrivateKey as SerDes>::into_bytes(sk.clone()))?;
+        sk
+    };
 
-    // --- Deserialization and Verification ---
-    // Convert the received bytes back into a public key.
-    let pk2 = ml_dsa_44::PublicKey::try_from_bytes(pk_recv)?;
-    // Verify the received message and signature.
-    let is_valid = pk2.verify(&msg_recv, &sig_recv, &[]);
-    assert!(is_valid, "Signature verification failed!");
+    // Derive the public key from the private key.
+    let public_key = private_key.get_public_key();
 
-    println!("Signature verified successfully!");
+    // 3. Sign the input message.
+    // (The empty slice is the NIST-specified context value.)
+    let signature = private_key.try_sign(&message, &[])?;
+
+    // 4. Output:
+    //    - The public key (hex-encoded) is printed to standard error.
+    //    - The signature (hex-encoded) is printed to standard output.
+    eprintln!("Public Key (hex): {}", hex::encode(public_key.into_bytes()));
+    println!("{}", hex::encode(signature));
+
     Ok(())
 }
