@@ -1,7 +1,11 @@
 [package]
-name = "fips204_example"
+name = "li2utils"
 version = "0.1.0"
 edition = "2021"
+
+[[bin]]
+name = "li2sign"
+path = "src/li2sign.rs"
 
 [dependencies]
 fips204 = { git = "https://github.com/integritychain/fips204.git", features = ["ml-dsa-44", "default-rng"]}

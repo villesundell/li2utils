@@ -58,14 +58,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fips204_example"
-version = "0.1.0"
-dependencies = [
- "fips204",
- "hex",
-]
-
-[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -99,6 +91,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ecc2af9a1119c51f12a14607e783cb977bde58bc069ff0c3da1095e635d70654"
 dependencies = [
  "cpufeatures",
+]
+
+[[package]]
+name = "li2utils"
+version = "0.1.0"
+dependencies = [
+ "fips204",
+ "hex",
 ]
 
 [[package]]
