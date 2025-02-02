@@ -2,6 +2,10 @@
 name = "li2utils"
 version = "0.1.0"
 edition = "2021"
+license = "CC0-1.0"
+authors = ["Ville Sundell <development@solarius.fi>"]
+homepage = "https://github.com/villesundell/li2utils"
+repository = "https://github.com/villesundell/li2utils"
 
 [[bin]]
 name = "li2sign"
@@ -12,5 +16,5 @@ name = "li2verify"
 path = "src/li2verify.rs"
 
 [dependencies]
-fips204 = { git = "https://github.com/integritychain/fips204.git", features = ["ml-dsa-44", "default-rng"]}
+fips204 = { version = "0.4.6", features = ["ml-dsa-44", "default-rng"]}
 hex = "0.4"
