@@ -7,6 +7,10 @@ edition = "2021"
 name = "li2sign"
 path = "src/li2sign.rs"
 
+[[bin]]
+name = "li2verify"
+path = "src/li2verify.rs"
+
 [dependencies]
 fips204 = { git = "https://github.com/integritychain/fips204.git", features = ["ml-dsa-44", "default-rng"]}
 hex = "0.4"
