@@ -4,7 +4,7 @@ This simple toolset is written in Rust and contains two tools: `li2sign` and `li
 
 **This is provided for your convenience, and contains no audit, assurance, or fitness for any purpose whatsoever.**
 
-This toolset relies completely on the great [`fips204`](https://crates.io/crates/fips204) Rust library by the RustCrypto Developers.
+This toolset relies completely on the great [`fips204`](https://crates.io/crates/fips204) Rust library by the RustCrypto Developers, and uses ML‐DSA‐44 parameters.
 
 ## li2sign
 Usage: `li2sign`

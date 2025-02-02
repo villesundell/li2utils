@@ -6,6 +6,7 @@ license = "CC0-1.0"
 authors = ["Ville Sundell <development@solarius.fi>"]
 homepage = "https://github.com/villesundell/li2utils"
 repository = "https://github.com/villesundell/li2utils"
+description = "Simple signer/verifier for FIPS 204 / CRYSTALS-Dilithium post quantum cryptography (PQC). Not verified / audited (WIP)!"
 
 [[bin]]
 name = "li2sign"
