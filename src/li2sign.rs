@@ -32,7 +32,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Generate a new key pair.
         let (_public_key, sk) = ml_dsa_44::try_keygen()?;
         // Save the private key bytes to the file.
-        fs::write(sk_path, &<ml_dsa_44::PrivateKey as SerDes>::into_bytes(sk.clone()))?;
+        fs::write(
+            sk_path,
+            &<ml_dsa_44::PrivateKey as SerDes>::into_bytes(sk.clone()),
+        )?;
         sk
     };
 
